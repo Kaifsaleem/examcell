@@ -1,5 +1,5 @@
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Logger } from '@nestjs/common';
 import { UserType, UserTypes } from '../../common/types';
@@ -8,11 +8,10 @@ import { Document } from '../../common/schema/document.schema';
 import { Types } from 'mongoose';
 import CtmSchema from '../../common/decorators/schema.decorator';
 
-import { timeStamp } from 'console';
+// import { timeStamp } from 'console';
 // import { randomBytes } from 'crypto';
 
-@CtmSchema() 
-
+@CtmSchema()
 export class User extends Document {
   @Prop({
     required: true,
@@ -39,9 +38,7 @@ export class User extends Document {
   @Prop({
     required: true,
   })
-  @Exclude({
-
-  })
+  @Exclude({})
   password: string;
 
   @Prop({
@@ -50,25 +47,33 @@ export class User extends Document {
   })
   type: UserType;
 
-
-  
   @Prop()
   course?: string;
 
-  @Prop({default: ''})
-    instituteId: string
+  @Prop({ default: '' })
+  instituteId: string;
 
- @Prop()
+  @Prop()
   yearOfStudy?: number;
 
-   @Prop({ type: [{ examId: { type: Types.ObjectId, ref: 'Exam' }, status: String }] })
-  exams?: { examId: Types.ObjectId; status: 'pending' | 'completed' | 'failed' }[];
+  @Prop({
+    type: [{ examId: { type: Types.ObjectId, ref: 'Exam' }, status: String }],
+  })
+  exams?: {
+    examId: Types.ObjectId;
+    status: 'pending' | 'completed' | 'failed';
+    default: 'pending';
+  }[];
 
   // Fields specific to teachers
   @Prop()
   department?: string;
 
- @Prop({ type: [{ examId: { type: Types.ObjectId, ref: 'Exam' }, dateAssigned: Date }] })
+  @Prop({
+    type: [
+      { examId: { type: Types.ObjectId, ref: 'Exam' }, dateAssigned: Date },
+    ],
+  })
   examsAssigned?: { examId: Types.ObjectId; dateAssigned: Date }[];
 
   // Fields specific to institutes
@@ -79,11 +84,11 @@ export class User extends Document {
   contactNumber?: string;
 
   @Prop()
-    instituteCode?:string
+  instituteCode?: string;
 
   @Prop({
     type: [{ type: Types.ObjectId, ref: 'User' }],
-    example:'[]'
+    example: '[]',
   })
   teachers?: Types.ObjectId[];
 
@@ -145,14 +150,13 @@ UserSchema.pre('save', async function (next) {
   // if (this.isModified('passwordResetToken')) {
   //   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
   // }
-   if (this.type === 'STUDENT') {
+  if (this.type === 'STUDENT') {
     this.department = undefined;
     this.examsAssigned = undefined;
     this.address = undefined;
     this.contactNumber = undefined;
     this.teachers = undefined;
-     this.students = undefined;
-     
+    this.students = undefined;
   } else if (this.type === 'TEACHER') {
     this.course = undefined;
     this.yearOfStudy = undefined;

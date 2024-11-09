@@ -7,6 +7,7 @@ import EventEmitterProvider from './global/providers/eventEmmiter.provider';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthMiddleware } from './modules/auth/auth.middleware';
+import { ExamModule } from './modules/exam/exam.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthMiddleware } from './modules/auth/auth.middleware';
     EventEmitterProvider,
     AuthModule,
     UsersModule,
+    ExamModule,
   ],
   controllers: [AppController],
   providers: [AppService],
