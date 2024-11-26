@@ -83,6 +83,7 @@ export class ExamController {
   // Delete an exam by ID
   @Delete(':id')
   remove(@Param('id') id: string): Promise<any> {
+    
     return this.examService.remove(id);
   }
 }
